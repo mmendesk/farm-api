@@ -11,6 +11,7 @@ export default class MedicineApi {
     this.router = Router();
     this.router.post("/medicine", authClientMiddleware, this.create);
     this.router.put("/medicine/:id", authClientMiddleware, this.update);
+    this.router.get("/medicine/all", authClientMiddleware, this.medicine);
     this.router.get("/medicines", authClientMiddleware, this.listRemedy);
     this.router.get("/health", (req, res) => {
       return res.send("Health ok");
@@ -46,6 +47,14 @@ export default class MedicineApi {
   ) => {
     try {
       return res.json(await this.medicineService.getMedicines());
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  private medicine = async (req: any, res: Response, next: NextFunction) => {
+    try {
+      return res.json(await this.medicineService.medicineAll());
     } catch (err) {
       next(err);
     }

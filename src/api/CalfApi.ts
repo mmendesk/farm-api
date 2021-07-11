@@ -14,7 +14,8 @@ export default class CalfApi {
     this.router.put("/calf/:id", authClientMiddleware, this.updateCalf);
     this.router.get("/calfs", authClientMiddleware, this.listCalf);
     this.router.get("/calf/all", authClientMiddleware, this.calf);
-    this.router.get("/users/:id", authClientMiddleware, this.getCalfById);
+    this.router.get("/calf/:id", authClientMiddleware, this.getCalfById);
+    this.router.get("/calf/:id/pdf", this.generatePdf);
     this.router.get("/health", (req, res) => {
       return res.send("Health ok");
     });
@@ -83,6 +84,27 @@ export default class CalfApi {
         );
     } catch (e) {
       next(e);
+    }
+  };
+
+  private generatePdf = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const buffer = await this.calfService.generatePdf(
+        Types.ObjectId(req.params.id)
+      );
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=${req.params.id}.pdf`
+      );
+      res.type("application/pdf");
+      res.write(buffer);
+      res.end();
+    } catch (err) {
+      next(err);
     }
   };
 }

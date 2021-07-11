@@ -5,6 +5,8 @@ import { createValidator, updateValidator } from "./medicine.validators";
 
 interface IMedicine {
   earringId: string;
+  vermifuge: string;
+  supplementation: string;
   remedy: string;
   remedyId: string;
   date?: Date;
@@ -50,5 +52,34 @@ export class MedicineService {
 
   async getMedicines() {
     return await medicineEntity.find({}).sort({ _id: -1 });
+  }
+
+  async medicineAll() {
+    const query = medicineEntity.find({});
+
+    const medicine = await query.sort({ _id: -1 }).exec();
+
+    return Promise.all(
+      medicine.map(async (element) => {
+        const medicines = await medicineEntity.findOne({
+          earringId: element.earringId,
+        });
+
+        const medicineFormat = {
+          earringId: medicines.earringId,
+          vermifuge: medicines.vermifuge,
+          supplementation: medicines.supplementation,
+          remedy: medicines.remedy,
+          remedyId: medicines.remedyId,
+          date: medicines.date,
+          dateValidate: medicines.dateValidate,
+        };
+
+        return {
+          medicine: element,
+          medicines: medicineFormat,
+        };
+      })
+    );
   }
 }

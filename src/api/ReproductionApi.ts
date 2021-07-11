@@ -10,6 +10,11 @@ export default class ReproductionApi {
   constructor() {
     this.router = Router();
     this.router.post("/reproduction", authClientMiddleware, this.create);
+    this.router.get(
+      "/reproduction/all",
+      authClientMiddleware,
+      this.reproduction
+    );
     this.router.put("/reproduction/:id", authClientMiddleware, this.update);
     this.router.get(
       "/reproduction",
@@ -50,6 +55,18 @@ export default class ReproductionApi {
   ) => {
     try {
       return res.json(await this.reproctionService.getReproduction());
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  private reproduction = async (
+    req: any,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      return res.json(await this.reproctionService.reproAll());
     } catch (err) {
       next(err);
     }

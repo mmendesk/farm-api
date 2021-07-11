@@ -4,8 +4,9 @@ export interface IReproduction extends Document {
   earringId: string;
   vermifuge: string;
   supplementation: string;
-  date?: Date;
+  insemination?: Date;
   winDate?: Date;
+  ride?: Date;
   updated_at?: Date;
   created_at?: Date;
 }
@@ -16,6 +17,8 @@ const ReproductionSchema: Schema = new Schema(
     vermifuge: { type: String, required: false },
     supplementation: { type: String, required: false },
     date: { type: String, required: false },
+    insemination: { type: String, required: false },
+    ride: { type: String, required: false },
     winDate: { type: String, required: false },
   },
   { timestamps: true }
