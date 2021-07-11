@@ -1,0 +1,40 @@
+version: "3"
+services:
+  mongo:
+    image: mongo:4.4.0
+    container_name: farm-mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - "./data:/data/db"
+    networks:
+      - mmendesk
+
+  mongo-test:
+    image: mongo:4.4.0
+    container_name: test-farm-mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - "./data.test:/data/db"
+    networks:
+      - mmendesk
+
+  api:
+    container_name: farm-api
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - .:/home/node/app
+    env_file:
+      - ./.env
+    ports:
+      - 3333:3333
+      - 9229:9229 #debug port
+    networks:
+      - mmendesk
+
+networks:
+  mmendesk:
+    name: mmendesk_network
